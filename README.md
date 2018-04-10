@@ -27,6 +27,8 @@ cd Adafruit_Python_MCP3008
 sudo python setup.py install
 cd ~
 sudo pip install adafruit-mcp3008
+cd ~
+sudo pip install w1thermsensor
 ```
 
 * Install pisensor project
