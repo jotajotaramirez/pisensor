@@ -20,7 +20,7 @@ This is a brief guide on how to use my custom generic sensor board on Raspberry 
   * `sudo apt-get install nodejs`
 * Install third party tools for GPIO
 
-```console
+```bash
 cd ~
 git clone https://github.com/adafruit/Adafruit_Python_MCP3008.git
 cd Adafruit_Python_MCP3008
@@ -44,7 +44,7 @@ sudo pip install w1thermsensor
 
 Consider to add the following command to your crontab as described before:
 
-```console
+```bash
 mkdir -p /home/pi/backups \
   && cd /home/pi/backups \
   && mongodump \
