@@ -60,10 +60,10 @@ def read_i2c_light():
     #CONTINUOUS_HIGH_RES_MODE_2 = 0x11
     # Start measurement at 1lx resolution. Time typically 120ms
     # Device is automatically set to Power Down after measurement.
-    ONE_TIME_HIGH_RES_MODE_1 = 0x20
+    #ONE_TIME_HIGH_RES_MODE_1 = 0x20
     # Start measurement at 0.5lx resolution. Time typically 120ms
     # Device is automatically set to Power Down after measurement.
-    #ONE_TIME_HIGH_RES_MODE_2 = 0x21
+    ONE_TIME_HIGH_RES_MODE_2 = 0x21
     # Start measurement at 1lx resolution. Time typically 120ms
     # Device is automatically set to Power Down after measurement.
     #ONE_TIME_LOW_RES_MODE = 0x23
@@ -72,7 +72,7 @@ def read_i2c_light():
     bus = smbus.SMBus(1)  # Rev 2 Pi uses 1
     BH1750 = 0x23 # Default device I2C address
 
-    data = bus.read_i2c_block_data(BH1750, ONE_TIME_HIGH_RES_MODE_1)
+    data = bus.read_i2c_block_data(BH1750, ONE_TIME_HIGH_RES_MODE_2)
 
     return { 'light': ((data[1] + (256 * data[0])) / 1.2) }
 
