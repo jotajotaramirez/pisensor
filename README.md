@@ -26,6 +26,10 @@ git clone https://github.com/adafruit/Adafruit_Python_MCP3008.git
 cd Adafruit_Python_MCP3008
 sudo python setup.py install
 cd ~
+git clone https://github.com/adafruit/Adafruit_Python_DHT
+cd Adafruit_Python_DHT
+sudo python setup.py install
+cd ~
 sudo pip install adafruit-mcp3008
 cd ~
 sudo pip install w1thermsensor
