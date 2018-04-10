@@ -33,7 +33,11 @@ def read_mcp():
         output['mcp_%d' % i] = mcp.read_adc(i)
     return output
 
+def read_1wire_temperature():
+    from w1thermsensor import W1ThermSensor
 
+    sensor = W1ThermSensor()
+    return { 'temp1w': sensor.get_temperature() }
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['sensor']
@@ -41,7 +45,12 @@ collection = db['data']
 
 document = { "date": datetime.now() }
 
+# Read analog inputs from MCP3008
 document.update(read_mcp())
+time.sleep(0.5)
+
+# Read 1-wire temperature sensor
+document.update(read_1wire_temperature())
 time.sleep(0.5)
 
 # Save all data

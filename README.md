@@ -48,4 +48,3 @@ mkdir -p /home/pi/backups \
 ## Configure services
 
 * Start mongo when raspberry starts: `sudo service mongod start`
-* sudo pip install web.py
