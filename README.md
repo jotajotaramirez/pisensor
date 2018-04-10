@@ -14,7 +14,7 @@ This is a brief guide on how to use my custom generic sensor board on Raspberry 
 * Install software
   * `sudo apt-get upgrade`
   * `sudo apt-get update`
-  * `sudo apt-get install vim mongodb python-pymongo python3-pymongo build-essential python-dev python-smbus python-pymongo python-pip git`
+  * `sudo apt-get install vim mongodb python-pymongo python3-pymongo build-essential python-dev python-smbus python-pymongo python-pip git i2c-tools`
 * Install nodejs 8
   * `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
   * `sudo apt-get install nodejs`
@@ -30,9 +30,9 @@ git clone https://github.com/adafruit/Adafruit_Python_DHT
 cd Adafruit_Python_DHT
 sudo python setup.py install
 cd ~
-sudo pip install adafruit-mcp3008
+pip install adafruit-mcp3008
 cd ~
-sudo pip install w1thermsensor
+pip install w1thermsensor
 ```
 
 * Install pisensor project
