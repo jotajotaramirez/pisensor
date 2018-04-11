@@ -2,8 +2,9 @@
   "name": "pisensor",
   "version": "0.0.1",
   "description": "Application to show sensor values and historical graphs",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
+    "start": "node app/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
