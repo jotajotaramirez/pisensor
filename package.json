@@ -1,0 +1,42 @@
+{
+  "name": "pisensor",
+  "version": "0.0.1",
+  "description": "Application to show sensor values and historical graphs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jotajotaramirez/pisensor.git"
+  },
+  "keywords": [
+    "raspberry",
+    "raspberry",
+    "pi",
+    "sensor",
+    "mcp3008",
+    "dht22",
+    "DS18B20",
+    "BH1750",
+    "i2c",
+    "1wire",
+    "spi",
+    "adafruit",
+    "mongo"
+  ],
+  "author": "Juan Jose Ramirez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jotajotaramirez/pisensor/issues"
+  },
+  "homepage": "https://github.com/jotajotaramirez/pisensor#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "figlet": "^1.2.0",
+    "mongodb": "^3.0.6"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
+}
