@@ -2,8 +2,7 @@
 
 const
   HTTP_PORT = 80,
-  MONGO_URL = 'mongodb://localhost:27017',
-  MONGO_DB = 'sensor',
+  MONGO_URL = 'mongodb://localhost:27017/sensor',
   DATA_COLLECTION = 'data';
 
 const
@@ -13,10 +12,8 @@ const
   client = new MongoClient(MONGO_URL);
 
 // Connect to mongo
-MongoClient.connect(MONGO_URL).then(client => {
-  const
-    db = client.db(MONGO_DB),
-    dataCollection = db.collection(DATA_COLLECTION);
+MongoClient.connect(MONGO_URL).then(db => {
+  const dataCollection = db.collection(DATA_COLLECTION);
 
   // Configure data collection
   dataCollection.createIndex({ date: 1 });
@@ -27,23 +24,14 @@ MongoClient.connect(MONGO_URL).then(client => {
   });
 
   app.get('/mcp3008', function(req, res) {
-    dataCollection.find({}, {
-      projection: {
-        mcp_0: 1,
-        mcp_1: 1,
-        mcp_2: 1,
-        mcp_3: 1,
-        mcp_4: 1,
-        mcp_5: 1,
-        mcp_6: 1,
-        mcp_7: 1,
-      }
-    }).sort({ date: -1 }).toArray()
-    .then(values => res.json(values));
+    dataCollection.find().sort({ date: -1 }).toArray()
+    .then(values => res.json(values.map(x => ({
+	    date: x.date, mcp_0: x.mcp_0, mcp_1: x.mcp_1, mcp_2: x.mcp_2, mcp_3: x.mcp_3, mcp_4: x.mcp_4, mcp_5: x.mcp_5, mcp_6: x.mcp_6, mcp_7: x.mcp_7
+    }))));
   });
 
   app.listen(HTTP_PORT, function() {
-    console.log('Server started');
+    console.log(`Server started listening to port ${HTTP_PORT}`);
   });
 
 })
