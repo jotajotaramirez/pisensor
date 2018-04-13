@@ -18,7 +18,7 @@
     <div class="row text-center">
       <div class="col">
         <div class="row">
-          <h2 class="w-100">Humedad</h2>
+          <h2 class="w-100"><a href="/dht22_humidity">Humedad</a></h2>
         </div>
         <div class="row">
             <svg id="humidity" width="100%" height="15rem"></svg>
@@ -27,7 +27,7 @@
 
       <div class="col">
         <div class="row">
-            <h2 class="w-100">Temperatura interior</h2>
+            <h2 class="w-100"><a href="/dht22_temperature">Temperatura interior</a></h2>
         </div>
         <div class="row">
             <span class="temperature"><%= dht22_temperature %> ºC</span>
@@ -36,7 +36,7 @@
 
       <div class="col">
         <div class="row">
-            <h2 class="w-100">Temperatura exterior</h2>
+            <h2 class="w-100"><a href="/temp1w">Temperatura exterior</a></h2>
         </div>
         <div class="row">
             <span class="temperature"><%= temp1w %> ºC</span>
@@ -45,7 +45,7 @@
 
       <div class="col">
         <div class="row">
-            <h2 class="w-100">Luz</h2>
+            <h2 class="w-100"><a href="/light">Luz</a></h2>
         </div>
         <div class="row">
             <span class="light"><%= light %> lux</span>
@@ -54,7 +54,7 @@
 
       <div class="col">
         <div class="row">
-          <h2 class="w-100">Lluvia</h2>
+          <h2 class="w-100"><a href="/mcp_6">Lluvia</a></h2>
         </div>
         <div class="row">
             <svg id="rain" width="100%"></svg>
@@ -63,7 +63,7 @@
 
       <div class="col">
         <div class="row">
-            <h2 class="w-100">Calidad del aire</h2>
+            <h2 class="w-100"><a href="/mcp_7">Calidad del aire</a></h2>
         </div>
         <div class="row">
             <span class="airQuality"><%= mcp_7 %> ppm</span>
@@ -74,59 +74,16 @@
 
     <div class="row text-center">
       <h2 class="w-100">Humedad en tierra</h2>
+      <% for (let i = 0; i < 6; i++) { %>
       <div class="col">
         <div class="row">
-          <h3 class="w-100">1</h3>
+          <h3 class="w-100"><a href="/mcp_<%= i %>"><%= i %></a></h3>
         </div>
         <div class="row">
-          <svg id="ground1" width="100%" height="100"></svg>
+          <svg id="ground<%= i %>" width="100%" height="100"></svg>
         </div>
       </div>
-
-      <div class="col">
-        <div class="row">
-          <h3 class="w-100">2</h3>
-        </div>
-        <div class="row">
-          <svg id="ground2" width="100%" height="100"></svg>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="row">
-          <h3 class="w-100">3</h3>
-        </div>
-        <div class="row">
-          <svg id="ground3" width="100%" height="100"></svg>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="row">
-          <h3 class="w-100">4</h3>
-        </div>
-        <div class="row">
-          <svg id="ground4" width="100%" height="100"></svg>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="row">
-          <h3 class="w-100">5</h3>
-        </div>
-        <div class="row">
-          <svg id="ground5" width="100%" height="100"></svg>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="row">
-          <h3 class="w-100">6</h3>
-        </div>
-        <div class="row">
-          <svg id="ground6" width="100%" height="100"></svg>
-        </div>
-      </div>
+      <% } %>
 
     </div>
   </div>

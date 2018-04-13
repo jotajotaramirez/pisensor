@@ -16,12 +16,13 @@ function convertToPercentage(value) {
   return (value / 1024 * 100).toFixed(2);
 }
 
-function generateSensorPageEndpoint(app, sensor, units, title, percentage = false) {
+function generateSensorPageEndpoint(app, sensor, units, title, percentage, max = null) {
   app.get(`/${sensor}`, function(req, res) {
     ejs.renderFile(`${__dirname}/template/all.ejs`, {
         units,
         title,
         percentage,
+        max,
         field: sensor,
       }, (err, page) => {
         if (err) {
@@ -69,15 +70,15 @@ MongoClient.connect(MONGO_URL).then(db => {
       }));
   });
 
-  generateSensorPageEndpoint(app, 'light', 'lux', 'Histórico del sensor de luz');
-  generateSensorPageEndpoint(app, 'temp1w', 'ºC', 'Histórico del sensor de temperatura exterior');
-  generateSensorPageEndpoint(app, 'dht22_humidity', '%', 'Histórico del sensor de humedad');
-  generateSensorPageEndpoint(app, 'dht22_temperature', 'ºC', 'Histórico del sensor de temperatura interior');
+  generateSensorPageEndpoint(app, 'light', 'lux', 'Histórico del sensor de luz', false);
+  generateSensorPageEndpoint(app, 'temp1w', 'ºC', 'Histórico del sensor de temperatura exterior', false);
+  generateSensorPageEndpoint(app, 'dht22_humidity', '%', 'Histórico del sensor de humedad', false, 100);
+  generateSensorPageEndpoint(app, 'dht22_temperature', 'ºC', 'Histórico del sensor de temperatura interior', false);
   for (let i = 0; i < 6; i++) {
-    generateSensorPageEndpoint(app, `mcp_${i}`, '%', `Histórico del sensor de humedad en tierra ${i + 1}`, true);
+    generateSensorPageEndpoint(app, `mcp_${i}`, '%', `Histórico del sensor de humedad en tierra ${i + 1}`, true, 100);
   }
-  generateSensorPageEndpoint(app, 'mcp_6', '%', 'Histórico del sensor de lluvia', true);
-  generateSensorPageEndpoint(app, 'mcp_7', 'ppm', 'Histórico del sensor de calidad del aire', true);
+  generateSensorPageEndpoint(app, 'mcp_6', '%', 'Histórico del sensor de lluvia', true, 100);
+  generateSensorPageEndpoint(app, 'mcp_7', 'ppm', 'Histórico del sensor de calidad del aire', true, 100);
 
 
   app.get('/api/last', function(req, res) {
