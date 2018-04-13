@@ -25,21 +25,20 @@ MongoClient.connect(MONGO_URL).then(db => {
 
   app.get('/', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
-    .then(last => {
-      ejs.renderFile(`${__dirname}/template/index.ejs`, {
-        light: last.light,
-        temp1w: last.temp1w,
-        dht22_humidity: last.dht22_humidity,
-        dht22_temperature: last.dht22_temperature,
-        date: last.date.toLocaleDateString("es-ES"),
-        mcp_0: convertToPercentage(last.mcp_0),
-        mcp_1: convertToPercentage(last.mcp_1),
-        mcp_2: convertToPercentage(last.mcp_2),
-        mcp_3: convertToPercentage(last.mcp_3),
-        mcp_4: convertToPercentage(last.mcp_4),
-        mcp_5: convertToPercentage(last.mcp_5),
-        mcp_6: convertToPercentage(last.mcp_6),
-        mcp_7: convertToPercentage(last.mcp_7)
+    .then(last => ejs.renderFile(`${__dirname}/template/index.ejs`, {
+        light: last[0].light,
+        temp1w: last[0].temp1w,
+        dht22_humidity: last[0].dht22_humidity,
+        dht22_temperature: last[0].dht22_temperature,
+        date: last[0].date.toLocaleDateString("es-ES"),
+        mcp_0: convertToPercentage(last[0].mcp_0),
+        mcp_1: convertToPercentage(last[0].mcp_1),
+        mcp_2: convertToPercentage(last[0].mcp_2),
+        mcp_3: convertToPercentage(last[0].mcp_3),
+        mcp_4: convertToPercentage(last[0].mcp_4),
+        mcp_5: convertToPercentage(last[0].mcp_5),
+        mcp_6: convertToPercentage(last[0].mcp_6),
+        mcp_7: convertToPercentage(last[0].mcp_7)
       }, (err, page) => {
         if (err) {
           console.error(error);
@@ -48,7 +47,7 @@ MongoClient.connect(MONGO_URL).then(db => {
 
         res.send(page);
       });
-    });
+    );
   });
 
   app.get('/last', function(req, res) {
