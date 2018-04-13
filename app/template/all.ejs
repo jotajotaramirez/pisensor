@@ -74,13 +74,17 @@
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-    d3.json("http://192.168.1.40/api/<%= field %>", function(error, data) {
+    d3.json("http://192.168.1.40/api/<%= field %>?percentage=<%= percentage %>", function(error, data) {
       if (error) throw error;
 
       data = data.map((x,i) => ({date: new Date(x.date), <%= field %>: x.<%= field %>}))
 
       x.domain(d3.extent(data, function(d) { return d.date; }));
+      <% if (percentage === true) { %>
+      y.domain([0, 100]);
+      <% } else { %>
       y.domain([0, d3.max(data, function(d) { return d.<%= field %>; })]);
+      <% } %>
       x2.domain(x.domain());
       y2.domain(y.domain());
 
