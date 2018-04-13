@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Modified from https://gist.github.com/mbostock/34f08d5e11952a80609169b7917d4172 -->
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -83,41 +84,41 @@
       y2.domain(y.domain());
 
       focus.append("path")
-          .datum(data)
-          .attr("class", "area")
-          .attr("d", area);
+        .datum(data)
+        .attr("class", "area")
+        .attr("d", area);
 
       focus.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
       focus.append("g")
-          .attr("class", "axis axis--y")
-          .call(yAxis)
-          .text("<%= units %>");
+        .attr("class", "axis axis--y")
+        .text("<%= units %>")
+        .call(yAxis);
 
       context.append("path")
-          .datum(data)
-          .attr("class", "area")
-          .attr("d", area2);
+        .datum(data)
+        .attr("class", "area")
+        .attr("d", area2);
 
       context.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + height2 + ")")
-          .call(xAxis2);
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height2 + ")")
+        .call(xAxis2);
 
       context.append("g")
-          .attr("class", "brush")
-          .call(brush)
-          .call(brush.move, x.range());
+        .attr("class", "brush")
+        .call(brush)
+        .call(brush.move, x.range());
 
       svg.append("rect")
-          .attr("class", "zoom")
-          .attr("width", width)
-          .attr("height", height)
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-          .call(zoom);
+        .attr("class", "zoom")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(zoom);
     });
 
     function brushed() {
@@ -127,8 +128,8 @@
       focus.select(".area").attr("d", area);
       focus.select(".axis--x").call(xAxis);
       svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
-          .scale(width / (s[1] - s[0]))
-          .translate(-s[0], 0));
+        .scale(width / (s[1] - s[0]))
+        .translate(-s[0], 0));
     }
 
     function zoomed() {
