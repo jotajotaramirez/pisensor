@@ -13,7 +13,7 @@ const
   client = new MongoClient(MONGO_URL);
 
 function convertToPercentage(value) {
-  return value / 1024 * 100;
+  return (value / 1024 * 100).toFixed(2);
 }
 
 // Connect to mongo
