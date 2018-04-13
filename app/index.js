@@ -16,6 +16,10 @@ function convertToPercentage(value) {
   return (value / 1024 * 100).toFixed(2);
 }
 
+function generateMCPEndpoint(app, index, sensorName) {
+
+}
+
 // Connect to mongo
 MongoClient.connect(MONGO_URL).then(db => {
   const dataCollection = db.collection(DATA_COLLECTION);
@@ -53,8 +57,24 @@ MongoClient.connect(MONGO_URL).then(db => {
 
   app.get('/light', function(req, res) {
     ejs.renderFile(`${__dirname}/template/all.ejs`, {
+        title: "Histórico del sensor de luz",
         field: "light",
         units: "lux",
+      }, (err, page) => {
+        if (err) {
+          console.error(error);
+          return res.status(500).send(`Error: ${err.message}`);
+        }
+
+        res.send(page);
+      });
+  });
+
+  app.get('/temp1w', function(req, res) {
+    ejs.renderFile(`${__dirname}/template/all.ejs`, {
+        title: "Histórico del sensor de temperatura exterior",
+        field: "temp1w",
+        units: "ºC",
       }, (err, page) => {
         if (err) {
           console.error(error);
@@ -70,7 +90,9 @@ MongoClient.connect(MONGO_URL).then(db => {
     .then(last => res.json(last));
   });
 
-  app.get('/mcp3008', function(req, res) {
+
+
+  app.get('/api/mcp_0', function(req, res) {
     dataCollection.find().sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
@@ -85,16 +107,20 @@ MongoClient.connect(MONGO_URL).then(db => {
     }))));
   });
 
-  app.get('/api/light', function(req, res) {
-    dataCollection.find({ light: { $exists:true } }).sort({ date: -1 }).toArray()
-    .then(values => res.json(values.map(x => ({
-      date: x.date,
-      light: x.light,
-    }))));
+  app.get('/api/:sensor', function(req, res) {
+    const query = {};
+    query[req.params.sensor] = { $exists:true };
+    dataCollection.find(query).sort({ date: -1 }).toArray()
+    .then(values => res.json(values.map(x => {
+      const sensorData = {};
+      sensorData.date = x.date;
+      sensorData[req.params.sensor] = x[req.params.sensor];
+      return sensorData;
+    })));
   });
 
   app.get('/api/temp1w', function(req, res) {
-    dataCollection.find().sort({ date: -1 }).toArray()
+    dataCollection.find({ temp1w: { $exists:true } }).sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
       temperature: x.temp1w,
@@ -102,7 +128,7 @@ MongoClient.connect(MONGO_URL).then(db => {
   });
 
   app.get('/api/dht22_humidity', function(req, res) {
-    dataCollection.find().sort({ date: -1 }).toArray()
+    dataCollection.find({ dht22_humidity: { $exists:true } }).sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
       humidity: x.dht22_humidity,
@@ -110,7 +136,7 @@ MongoClient.connect(MONGO_URL).then(db => {
   });
 
   app.get('/api/dht22_temperature', function(req, res) {
-    dataCollection.find().sort({ date: -1 }).toArray()
+    dataCollection.find({ dht22_temperature: { $exists:true } }).sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
       temperature: x.dht22_temperature,
