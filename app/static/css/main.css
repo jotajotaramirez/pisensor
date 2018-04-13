@@ -3,6 +3,11 @@ h2 {
   white-space: nowrap;
 }
 
+h2 a,
+h3 a {
+  color: green;
+}
+
 .temperature,
 .light,
 .airQuality {
