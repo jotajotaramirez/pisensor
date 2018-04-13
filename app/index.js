@@ -23,6 +23,8 @@ MongoClient.connect(MONGO_URL).then(db => {
   // Configure data collection
   dataCollection.createIndex({ date: 1 });
 
+  app.use(express.static('static'));
+
   app.get('/', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
     .then(last => ejs.renderFile(`${__dirname}/template/index.ejs`, {
