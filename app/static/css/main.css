@@ -1,0 +1,17 @@
+body {
+  background-color: gray;
+}
+
+.temperature,
+.light,
+.airQuality {
+  font-size: 4rem;
+  margin: 0 1rem;
+  white-space: nowrap;
+  width: 100%;
+}
+
+h2 {
+  margin: 1rem;
+  white-space: nowrap;
+}

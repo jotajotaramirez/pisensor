@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Pi Sensor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://d3js.org/d3.v3.js"></script>
+  <script src="js/liquidfillgauge.js"></script>
+</head>
+<body>
+  <h1>Últimos valores</h1>
+  <div>Fecha: <%= date %></div>
+  <div class="container-fluid">
+    <div class="row text-center">
+      <div class="col">
+        <div class="row">
+          <h2 class="w-100">Humedad</h2>
+        </div>
+        <div class="row">
+            <svg id="humidity" width="100%" height="15rem"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+            <h2 class="w-100">Temperatura interior</h2>
+        </div>
+        <div class="row">
+            <span class="temperature"><%= dht22_temperature %> ºC</span>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+            <h2 class="w-100">Temperatura exterior</h2>
+        </div>
+        <div class="row">
+            <span class="temperature"><%= temp1w %> ºC</span>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+            <h2 class="w-100">Luz</h2>
+        </div>
+        <div class="row">
+            <span class="light"><%= light %> lux</span>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <h2 class="w-100">Lluvia</h2>
+        </div>
+        <div class="row">
+            <svg id="rain" width="100%"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+            <h2 class="w-100">Calidad del aire</h2>
+        </div>
+        <div class="row">
+            <span class="airQuality"><%= mcp_7 %> ppm</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row text-center">
+      <h2 class="w-100">Humedad en tierra</h2>
+      <div class="col">
+        <div class="row">
+          <h3 class="w-100">1</h3>
+        </div>
+        <div class="row">
+          <svg id="ground1" width="100%" height="100"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <h3 class="w-100">2</h3>
+        </div>
+        <div class="row">
+          <svg id="ground2" width="100%" height="100"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <h3 class="w-100">3</h3>
+        </div>
+        <div class="row">
+          <svg id="ground3" width="100%" height="100"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <h3 class="w-100">4</h3>
+        </div>
+        <div class="row">
+          <svg id="ground4" width="100%" height="100"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <h3 class="w-100">5</h3>
+        </div>
+        <div class="row">
+          <svg id="ground5" width="100%" height="100"></svg>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="row">
+          <h3 class="w-100">6</h3>
+        </div>
+        <div class="row">
+          <svg id="ground6" width="100%" height="100"></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const humidityConfig = liquidFillGaugeDefaultSettings();
+    humidityConfig.waveAnimateTime = 5000;
+    humidityConfig.waveHeight = 0.2;
+    loadLiquidFillGauge("humidity", <%= dht22_humidity %>, humidityConfig);
+
+    loadLiquidFillGauge("rain", <%= mcp_6 %>, humidityConfig);
+
+    const groundConfig = liquidFillGaugeDefaultSettings();
+    groundConfig.waveAnimateTime = 2000;
+    groundConfig.waveHeight = 0.1;
+    groundConfig.circleColor = "#D4AB6A";
+    groundConfig.textColor = "#000";
+    groundConfig.waveTextColor = "#805615";
+    groundConfig.waveColor = "#AA7D39";
+    loadLiquidFillGauge("ground1", <%= mcp_0 %>, groundConfig);
+    loadLiquidFillGauge("ground2", <%= mcp_1 %>, groundConfig);
+    loadLiquidFillGauge("ground3", <%= mcp_2 %>, groundConfig);
+    loadLiquidFillGauge("ground4", <%= mcp_3 %>, groundConfig);
+    loadLiquidFillGauge("ground5", <%= mcp_4 %>, groundConfig);
+    loadLiquidFillGauge("ground6", <%= mcp_5 %>, groundConfig);
+
+
+</script>
+</body>
+</html>

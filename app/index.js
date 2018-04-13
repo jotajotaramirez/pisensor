@@ -8,8 +8,13 @@ const
 const
   express = require('express'),
   app = express(),
+  ejs = require('ejs'),
   MongoClient = require('mongodb').MongoClient,
   client = new MongoClient(MONGO_URL);
+
+function convertToPercentage(value) {
+  return value / 1024 * 100;
+}
 
 // Connect to mongo
 MongoClient.connect(MONGO_URL).then(db => {
@@ -17,6 +22,34 @@ MongoClient.connect(MONGO_URL).then(db => {
 
   // Configure data collection
   dataCollection.createIndex({ date: 1 });
+
+  app.get('/', function(req, res) {
+    dataCollection.find().sort({ date: -1 }).limit(1).toArray()
+    .then(last => {
+      ejs.renderFile(`${__dirname}/template/index.ejs`, {
+        light: last.light,
+        temp1w: last.temp1w,
+        dht22_humidity: last.dht22_humidity,
+        dht22_temperature: last.dht22_temperature,
+        date: last.date.toLocaleDateString("es-ES"),
+        mcp_0: convertToPercentage(last.mcp_0),
+        mcp_1: convertToPercentage(last.mcp_1),
+        mcp_2: convertToPercentage(last.mcp_2),
+        mcp_3: convertToPercentage(last.mcp_3),
+        mcp_4: convertToPercentage(last.mcp_4),
+        mcp_5: convertToPercentage(last.mcp_5),
+        mcp_6: convertToPercentage(last.mcp_6),
+        mcp_7: convertToPercentage(last.mcp_7)
+      }, (err, page) => {
+        if (err) {
+          console.error(error);
+          return res.status(500).send(`Error: ${err.message}`);
+        }
+
+        res.send(page);
+      });
+    });
+  });
 
   app.get('/last', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
