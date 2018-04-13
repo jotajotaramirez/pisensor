@@ -32,7 +32,7 @@ MongoClient.connect(MONGO_URL).then(db => {
         temp1w: last[0].temp1w,
         dht22_humidity: last[0].dht22_humidity,
         dht22_temperature: last[0].dht22_temperature,
-        date: last[0].date.toLocaleDateString("es-ES"),
+        date: last[0].date.toLocaleString("es-ES"),
         mcp_0: convertToPercentage(last[0].mcp_0),
         mcp_1: convertToPercentage(last[0].mcp_1),
         mcp_2: convertToPercentage(last[0].mcp_2),
