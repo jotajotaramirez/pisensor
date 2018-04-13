@@ -51,7 +51,21 @@ MongoClient.connect(MONGO_URL).then(db => {
       }));
   });
 
-  app.get('/last', function(req, res) {
+  app.get('/light', function(req, res) {
+    ejs.renderFile(`${__dirname}/template/all.ejs`, {
+        field: "light",
+        units: "lux",
+      }, (err, page) => {
+        if (err) {
+          console.error(error);
+          return res.status(500).send(`Error: ${err.message}`);
+        }
+
+        res.send(page);
+      });
+  });
+
+  app.get('/api/last', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
     .then(last => res.json(last));
   });
@@ -71,15 +85,15 @@ MongoClient.connect(MONGO_URL).then(db => {
     }))));
   });
 
-  app.get('/light', function(req, res) {
-    dataCollection.find().sort({ date: -1 }).toArray()
+  app.get('/api/light', function(req, res) {
+    dataCollection.find({ light: { $exists:true } }).sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
       light: x.light,
     }))));
   });
 
-  app.get('/temp1w', function(req, res) {
+  app.get('/api/temp1w', function(req, res) {
     dataCollection.find().sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
@@ -87,7 +101,7 @@ MongoClient.connect(MONGO_URL).then(db => {
     }))));
   });
 
-  app.get('/dht22_humidity', function(req, res) {
+  app.get('/api/dht22_humidity', function(req, res) {
     dataCollection.find().sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,
@@ -95,7 +109,7 @@ MongoClient.connect(MONGO_URL).then(db => {
     }))));
   });
 
-  app.get('/dht22_temperature', function(req, res) {
+  app.get('/api/dht22_temperature', function(req, res) {
     dataCollection.find().sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => ({
       date: x.date,

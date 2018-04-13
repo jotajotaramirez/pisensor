@@ -1,3 +1,8 @@
+h2 {
+  margin: 1rem;
+  white-space: nowrap;
+}
+
 .temperature,
 .light,
 .airQuality {
@@ -7,7 +12,13 @@
   width: 100%;
 }
 
-h2 {
-  margin: 1rem;
-  white-space: nowrap;
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
 }
