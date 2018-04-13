@@ -95,8 +95,14 @@
 
       focus.append("g")
         .attr("class", "axis axis--y")
-        .text("<%= units %>")
-        .call(yAxis);
+        .call(yAxis)
+        .append("text")
+        .attr("fill", "#000")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.71em")
+        .attr("text-anchor", "end")
+        .text("<%= units %>");
 
       context.append("path")
         .datum(data)
