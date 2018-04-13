@@ -14,23 +14,47 @@
   <div class="container-fluid">
     <div class="row text-center">
       <div class="col-sm">
-        <h2>Humedad en tierra 1</h2>
+        <h2>Temperatura</h2>
+      </div>
+      <div class="col-sm">
+        <h2>Humedad</h2>
       </div>
     </div>
     <div class="row text-center">
       <div class="col-sm">
-          <svg id="ground1" width="100%" height="250" onclick="gauge2.update(NewValue());"></svg>
+        <svg id="humidity" width="50%" height="250" onclick="gauge2.update(NewValue());"></svg>
+      </div>
+      <div class="col-sm">
+        
+      </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-sm">
+          <h2>Tierra 1</h2>
+        </div>
+      </div>
+    <div class="row text-center">
+      <div class="col-sm">
+          <svg id="ground1" height="100" onclick="gauge2.update(NewValue());"></svg>
       </div>
     </div>
   </div>
 
-  <script language="JavaScript">
-    var config = liquidFillGaugeDefaultSettings();
-    config.waveAnimateTime = 2000;
-    config.waveHeight = 0.3;
-    config.waveCount = 1;
+  <script>
+    const humidityConfig = liquidFillGaugeDefaultSettings();
+    humidityConfig.waveAnimateTime = 5000;
+    humidityConfig.waveHeight = 0.2;
+    loadLiquidFillGauge("humidity", 55, humidityConfig);
 
-    loadLiquidFillGauge("ground1", 55, config);
+    const groundConfig = liquidFillGaugeDefaultSettings();
+    groundConfig.waveAnimateTime = 2000;
+    groundConfig.waveHeight = 0.1;
+    groundConfig.circleColor = "#D4AB6A";
+    groundConfig.textColor = "#000";
+    groundConfig.waveTextColor = "#805615";
+    groundConfig.waveColor = "#AA7D39";
+    loadLiquidFillGauge("ground1", 55, groundConfig);
 </script>
 </body>
 </html>
