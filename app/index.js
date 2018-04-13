@@ -46,8 +46,7 @@ MongoClient.connect(MONGO_URL).then(db => {
         }
 
         res.send(page);
-      });
-    );
+      }));
   });
 
   app.get('/last', function(req, res) {
