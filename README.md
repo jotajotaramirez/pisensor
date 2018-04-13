@@ -15,7 +15,11 @@ Configure Raspberry Pi basics via `sudo raspi-config` (you'll need a monitor and
 
 ## Automatic installation
 
-Just run `sudo install.sh`
+Just run
+```bash
+chmod +x install.sh
+sudo ./install.sh
+```
 
 ## Manual installation
 
@@ -46,8 +50,12 @@ pip install w1thermsensor
 
 ## Store sensor data each minute
 
-* Make sure /home/pi/pisensor/update.py has exec permissions by running `chmod +x update.py`
-* Edit crontab by adding `* * * * * /home/pi/pisensor/update.py`. Changes these values if you want to use a different schedule.
+Make sure /home/pi/pisensor/update.py has exec permissions by running `chmod +x update.py`.
+Edit crontab by adding this line:
+
+```* * * * * /home/pi/pisensor/update.py```
+
+Changes these values if you want to use a different schedule.
 
 ## Automatically backup data
 
@@ -59,3 +67,15 @@ mkdir -p /home/pi/backups \
   && mongodump \
   && tar -czf "/home/pi/backups/sensor.$(date '+%F_%H%M%S').tar.gz" dump`
 ```
+
+
+# Acknowledgements
+Adafruit tutorials:
+
+* https://learn.adafruit.com/dht/using-a-dhtxx-sensor
+* https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
+* https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/overview
+
+Raspberry Spy tutorials:
+
+* https://www.raspberrypi-spy.co.uk/2015/03/bh1750fvi-i2c-digital-light-intensity-sensor/
