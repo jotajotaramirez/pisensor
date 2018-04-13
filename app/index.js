@@ -28,10 +28,10 @@ MongoClient.connect(MONGO_URL).then(db => {
   app.get('/', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
     .then(last => ejs.renderFile(`${__dirname}/template/index.ejs`, {
-        light: last[0].light,
-        temp1w: last[0].temp1w,
-        dht22_humidity: last[0].dht22_humidity,
-        dht22_temperature: last[0].dht22_temperature,
+        light: last[0].light.toFixed(0),
+        temp1w: last[0].temp1w.toFixed(2),
+        dht22_humidity: last[0].dht22_humidity.toFixed(2),
+        dht22_temperature: last[0].dht22_temperature.toFixed(2),
         date: last[0].date.toLocaleString("es-ES"),
         mcp_0: convertToPercentage(last[0].mcp_0),
         mcp_1: convertToPercentage(last[0].mcp_1),
