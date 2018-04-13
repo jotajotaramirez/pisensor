@@ -16,8 +16,21 @@ function convertToPercentage(value) {
   return (value / 1024 * 100).toFixed(2);
 }
 
-function generateMCPEndpoint(app, index, sensorName) {
+function generateSensorPageEndpoint(app, sensor, units, title) {
+  app.get(`/${sensor}`, function(req, res) {
+    ejs.renderFile(`${__dirname}/template/all.ejs`, {
+        units,
+        title,
+        field: sensor,
+      }, (err, page) => {
+        if (err) {
+          console.error(error);
+          return res.status(500).send(`Error: ${err.message}`);
+        }
 
+        res.send(page);
+      });
+  });
 }
 
 // Connect to mongo
@@ -55,56 +68,20 @@ MongoClient.connect(MONGO_URL).then(db => {
       }));
   });
 
-  app.get('/light', function(req, res) {
-    ejs.renderFile(`${__dirname}/template/all.ejs`, {
-        title: "Histórico del sensor de luz",
-        field: "light",
-        units: "lux",
-      }, (err, page) => {
-        if (err) {
-          console.error(error);
-          return res.status(500).send(`Error: ${err.message}`);
-        }
+  generateSensorPageEndpoint(app, 'light', 'lux', 'Histórico del sensor de luz');
+  generateSensorPageEndpoint(app, 'temp1w', 'ºC', 'Histórico del sensor de temperatura exterior');
+  generateSensorPageEndpoint(app, 'dht22_humidity', '%', 'Histórico del sensor de humedad');
+  generateSensorPageEndpoint(app, 'dht22_temperature', 'ºC', 'Histórico del sensor de temperatura interior');
+  for (let i = 0; i < 6; i++) {
+    generateSensorPageEndpoint(app, `mcp_${i}`, '%', `Histórico del sensor de humedad en tierra ${i + 1}`);
+  }
+  generateSensorPageEndpoint(app, 'mcp_6', '%', 'Histórico del sensor de lluvia');
+  generateSensorPageEndpoint(app, 'mcp_7', 'ppm', 'Histórico del sensor de calidad del aire');
 
-        res.send(page);
-      });
-  });
-
-  app.get('/temp1w', function(req, res) {
-    ejs.renderFile(`${__dirname}/template/all.ejs`, {
-        title: "Histórico del sensor de temperatura exterior",
-        field: "temp1w",
-        units: "ºC",
-      }, (err, page) => {
-        if (err) {
-          console.error(error);
-          return res.status(500).send(`Error: ${err.message}`);
-        }
-
-        res.send(page);
-      });
-  });
 
   app.get('/api/last', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
     .then(last => res.json(last));
-  });
-
-
-
-  app.get('/api/mcp_0', function(req, res) {
-    dataCollection.find().sort({ date: -1 }).toArray()
-    .then(values => res.json(values.map(x => ({
-      date: x.date,
-      mcp_0: x.mcp_0,
-      mcp_1: x.mcp_1,
-      mcp_2: x.mcp_2,
-      mcp_3: x.mcp_3,
-      mcp_4: x.mcp_4,
-      mcp_5: x.mcp_5,
-      mcp_6: x.mcp_6,
-      mcp_7: x.mcp_7,
-    }))));
   });
 
   app.get('/api/:sensor', function(req, res) {
@@ -119,30 +96,6 @@ MongoClient.connect(MONGO_URL).then(db => {
     })));
   });
 
-  app.get('/api/temp1w', function(req, res) {
-    dataCollection.find({ temp1w: { $exists:true } }).sort({ date: -1 }).toArray()
-    .then(values => res.json(values.map(x => ({
-      date: x.date,
-      temperature: x.temp1w,
-    }))));
-  });
-
-  app.get('/api/dht22_humidity', function(req, res) {
-    dataCollection.find({ dht22_humidity: { $exists:true } }).sort({ date: -1 }).toArray()
-    .then(values => res.json(values.map(x => ({
-      date: x.date,
-      humidity: x.dht22_humidity,
-    }))));
-  });
-
-  app.get('/api/dht22_temperature', function(req, res) {
-    dataCollection.find({ dht22_temperature: { $exists:true } }).sort({ date: -1 }).toArray()
-    .then(values => res.json(values.map(x => ({
-      date: x.date,
-      temperature: x.dht22_temperature,
-    }))));
-  });
-
   app.listen(HTTP_PORT, function() {
     console.log(`Server started listening to port ${HTTP_PORT}`);
   });
@@ -152,4 +105,3 @@ MongoClient.connect(MONGO_URL).then(db => {
   console.error(error);
   process.exit(-1);
 });
-
