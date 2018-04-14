@@ -30,6 +30,8 @@ sudo ./install.sh
 * Install nodejs 8
   * `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
   * `sudo apt-get install nodejs`
+* Install node dependencies
+  * `npm install`
 * Start mongo when raspberry starts: `sudo service mongod start`
 * Install third party tools for GPIO
 
@@ -51,11 +53,15 @@ pip install w1thermsensor
 ## Store sensor data each minute
 
 Make sure /home/pi/pisensor/update.py has exec permissions by running `chmod +x update.py`.
-Edit crontab by adding this line:
+Edit crontab by running `crontab -e` and adding this line with your favourite text editor:
 
 ```* * * * * /home/pi/pisensor/update.py```
 
 Changes these values if you want to use a different schedule.
+
+## Start node server
+
+Finally, once everything else has been setup, run `sudo npm start`.
 
 ## Automatically backup data
 

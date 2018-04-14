@@ -10,7 +10,8 @@ const
   app = express(),
   ejs = require('ejs'),
   MongoClient = require('mongodb').MongoClient,
-  client = new MongoClient(MONGO_URL);
+  client = new MongoClient(MONGO_URL),
+  figlet = require('figlet');
 
 function convertToPercentage(value) {
   return (value / 1024 * 100).toFixed(2);
@@ -34,6 +35,15 @@ function generateSensorPageEndpoint(app, sensor, units, title, percentage, max =
       });
   });
 }
+
+figlet('PiSensor', function(err, data) {
+  if (err) {
+      console.log('Something went wrong with figlet...');
+      console.dir(err);
+      return;
+  }
+  console.log(data);
+});
 
 // Connect to mongo
 MongoClient.connect(MONGO_URL).then(db => {

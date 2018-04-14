@@ -8,6 +8,8 @@ apt-get install vim mongodb python-pymongo python3-pymongo build-essential pytho
 curl -sL https://deb.nodesource.com/setup_8.x | bash -
 apt-get -y install nodejs
 
+npm install
+
 service mongod start
 
 cd /tmp
