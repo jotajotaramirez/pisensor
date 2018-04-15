@@ -19,26 +19,31 @@ function convertToPercentage(value, max, decimals) {
 }
 
 function generateSensorPageEndpoint(app, sensor, config) {
-  app.get(`/${sensor}`, function(req, res) {
-    ejs.renderFile(`${__dirname}/template/history.ejs`, {
-        units: config.units,
-        title: config.description,
-        max: config.max,
-        field: sensor,
-      }, (err, page) => {
-        if (err) {
-          console.error(error);
-          return res.status(500).send(`Error: ${err.message}`);
-        }
+  let max = config.max;
+  if (config[sensor].units === '%' && max !== 100) {
+    max = 100;
+  }
 
-        res.send(page);
-      });
+  ejs.renderFile(`${__dirname}/template/history.ejs`, {
+    units: config.units,
+    title: config.description,
+    max: config.max,
+    field: sensor,
+  }, (err, page) => {
+    if (err) {
+      console.error(error);
+      return res.status(500).send(`Error: ${err.message}`);
+    }
+
+    app.get(`/${sensor}`, function(req, res) {
+      res.send(page);
+    });
   });
 }
 
 function processSensorValueFromDB(sensor, dbValue) {
+  const max = config[sensor].max;
   let sensorValue = dbValue;
-  let max = config[sensor].max;
 
   if (max !== undefined) {
     if (config[sensor].inverse) {
@@ -49,7 +54,6 @@ function processSensorValueFromDB(sensor, dbValue) {
     if (config[sensor].units === '%' && max !== 100) {
       // Sensor is a percentage in binary form
       sensorValue = convertToPercentage(sensorValue, max, 2);
-      max = 100;
     }
   }
 
