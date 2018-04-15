@@ -15,7 +15,7 @@ const
   config = require('./config');
 
 function convertToPercentage(value, max, decimals) {
-  return (value / max * 100).toFixed(decimals);
+  return (value / max * 100);
 }
 
 function generateSensorPageEndpoint(app, sensor, config) {
@@ -62,7 +62,7 @@ function processSensorValueFromDB(sensor, dbValue) {
     // TODO: Currently will just return its value
   }
 
-  return sensorValue;
+  return sensorValue.toFixed(config[sensor].decimals);
 }
 
 figlet('PiSensor', function(err, data) {
