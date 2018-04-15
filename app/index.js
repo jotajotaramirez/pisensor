@@ -25,9 +25,9 @@ function generateSensorPageEndpoint(app, sensor, config) {
   }
 
   ejs.renderFile(`${__dirname}/template/history.ejs`, {
+    max,
     units: config.units,
     title: config.description,
-    max: config.max,
     field: sensor,
   }, (err, page) => {
     if (err) {
