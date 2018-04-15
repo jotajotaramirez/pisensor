@@ -20,7 +20,7 @@ function convertToPercentage(value, max, decimals) {
 
 function generateSensorPageEndpoint(app, sensor, config) {
   let max = config.max;
-  if (config[sensor].units === '%' && max !== 100) {
+  if (config.units === '%' && max !== 100) {
     max = 100;
   }
 
