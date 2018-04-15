@@ -38,23 +38,25 @@ function generateSensorPageEndpoint(app, sensor, config) {
 
 function processSensorValueFromDB(sensor, dbValue) {
   let sensorValue = dbValue;
+  let max = config[sensor].max;
 
-  if (config[sensor].max !== undefined) {
+  if (max !== undefined) {
     if (config[sensor].inverse) {
       // Sensor data is inverted so max should be 0 and the opposite
-      sensorValue = config[sensor].max - sensorValue;
+      sensorValue = max - sensorValue;
     }
 
-    if (config[sensor].units === '%' && config[sensor].max !== 100) {
+    if (config[sensor].units === '%' && max !== 100) {
       // Sensor is a percentage in binary form
-      sensorValue = convertToPercentage(sensorValue, config[sensor].max, 2);
+      sensorValue = convertToPercentage(sensorValue, max, 2);
+      max = 100;
     }
   }
 
   if (config[sensor].units === 'ppm') {
     // Special case for MQ135 sensor
     // TODO: Currently will just return a percentage
-    sensorValue = convertToPercentage(sensorValue, config[sensor].max, 0);
+    sensorValue = convertToPercentage(sensorValue, max, 0);
   }
 
   return sensorValue;

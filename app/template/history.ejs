@@ -80,7 +80,7 @@
       data = data.map((x,i) => ({date: new Date(x.date), <%= field %>: x.<%= field %>}))
 
       x.domain(d3.extent(data, function(d) { return d.date; }));
-      <% if (max !== null) { %>
+      <% if (max !== undefined) { %>
       y.domain([0, <%= max %>]);
       <% } else { %>
       y.domain([0, d3.max(data, function(d) { return d.<%= field %>; })]);
