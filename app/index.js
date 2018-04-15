@@ -59,8 +59,7 @@ function processSensorValueFromDB(sensor, dbValue) {
 
   if (config[sensor].units === 'ppm') {
     // Special case for MQ135 sensor
-    // TODO: Currently will just return a percentage
-    sensorValue = convertToPercentage(sensorValue, max, 0);
+    // TODO: Currently will just return its value
   }
 
   return sensorValue;
