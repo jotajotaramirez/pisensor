@@ -71,11 +71,12 @@ Consider to add the following command to your crontab as described before to bac
 mkdir -p /home/pi/backups \
   && cd /home/pi/backups \
   && mongodump \
-  && tar -czf "/home/pi/backups/sensor.$(date '+%F_%H%M%S').tar.gz" dump`
+  && tar -czf "/home/pi/backups/sensor.$(date '+%F_%H%M%S').tar.gz" dump
 ```
 
 
-# Acknowledgements
+## Acknowledgements
+
 Adafruit tutorials:
 
 * https://learn.adafruit.com/dht/using-a-dhtxx-sensor
