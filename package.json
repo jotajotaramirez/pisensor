@@ -1,6 +1,6 @@
 {
   "name": "pisensor",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Application to show sensor values and historical graphs",
   "main": "app/index.js",
   "scripts": {
