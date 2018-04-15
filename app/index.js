@@ -11,19 +11,19 @@ const
   ejs = require('ejs'),
   MongoClient = require('mongodb').MongoClient,
   client = new MongoClient(MONGO_URL),
-  figlet = require('figlet');
+  figlet = require('figlet'),
+  config = require('./config');
 
-function convertToPercentage(value) {
-  return (value / 1024 * 100).toFixed(2);
+function convertToPercentage(value, max, decimals) {
+  return (value / max * 100).toFixed(decimals);
 }
 
-function generateSensorPageEndpoint(app, sensor, units, title, percentage, max = null) {
+function generateSensorPageEndpoint(app, sensor, config) {
   app.get(`/${sensor}`, function(req, res) {
-    ejs.renderFile(`${__dirname}/template/all.ejs`, {
-        units,
-        title,
-        percentage,
-        max,
+    ejs.renderFile(`${__dirname}/template/history.ejs`, {
+        units: config.units,
+        title: config.description,
+        max: config.max,
         field: sensor,
       }, (err, page) => {
         if (err) {
@@ -34,6 +34,30 @@ function generateSensorPageEndpoint(app, sensor, units, title, percentage, max =
         res.send(page);
       });
   });
+}
+
+function processSensorValueFromDB(sensor, dbValue) {
+  let sensorValue = dbValue;
+
+  if (config[sensor].max !== undefined) {
+    if (config[sensor].inverse) {
+      // Sensor data is inverted so max should be 0 and the opposite
+      sensorValue = config[sensor].max - sensorValue;
+    }
+
+    if (config[sensor].units === '%' && config[sensor].max !== 100) {
+      // Sensor is a percentage in binary form
+      sensorValue = convertToPercentage(sensorValue, config[sensor].max, 2);
+    }
+  }
+
+  if (config[sensor].units === 'ppm') {
+    // Special case for MQ135 sensor
+    // TODO: Currently will just return a percentage
+    sensorValue = convertToPercentage(sensorValue, config[sensor].max, 0);
+  }
+
+  return sensorValue;
 }
 
 figlet('PiSensor', function(err, data) {
@@ -57,19 +81,19 @@ MongoClient.connect(MONGO_URL).then(db => {
   app.get('/', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
     .then(last => ejs.renderFile(`${__dirname}/template/index.ejs`, {
-        light: last[0].light.toFixed(0),
-        temp1w: last[0].temp1w.toFixed(2),
-        dht22_humidity: last[0].dht22_humidity.toFixed(2),
-        dht22_temperature: last[0].dht22_temperature.toFixed(2),
         date: last[0].date.toLocaleString("es-ES"),
-        mcp_0: convertToPercentage(last[0].mcp_0),
-        mcp_1: convertToPercentage(last[0].mcp_1),
-        mcp_2: convertToPercentage(last[0].mcp_2),
-        mcp_3: convertToPercentage(last[0].mcp_3),
-        mcp_4: convertToPercentage(last[0].mcp_4),
-        mcp_5: convertToPercentage(last[0].mcp_5),
-        mcp_6: convertToPercentage(last[0].mcp_6),
-        mcp_7: convertToPercentage(last[0].mcp_7)
+        light: processSensorValueFromDB('light', last[0].light),
+        temp1w: processSensorValueFromDB('temp1w', last[0].temp1w),
+        dht22_humidity: processSensorValueFromDB('dht22_humidity', last[0].dht22_humidity),
+        dht22_temperature: processSensorValueFromDB('dht22_temperature', last[0].dht22_temperature),
+        mcp_0: processSensorValueFromDB('mcp_0', last[0].mcp_0),
+        mcp_1: processSensorValueFromDB('mcp_1', last[0].mcp_1),
+        mcp_2: processSensorValueFromDB('mcp_2', last[0].mcp_2),
+        mcp_3: processSensorValueFromDB('mcp_3', last[0].mcp_3),
+        mcp_4: processSensorValueFromDB('mcp_4', last[0].mcp_4),
+        mcp_5: processSensorValueFromDB('mcp_5', last[0].mcp_5),
+        mcp_6: processSensorValueFromDB('mcp_6', last[0].mcp_6),
+        mcp_7: processSensorValueFromDB('mcp_7', last[0].mcp_7)
       }, (err, page) => {
         if (err) {
           console.error(error);
@@ -80,16 +104,9 @@ MongoClient.connect(MONGO_URL).then(db => {
       }));
   });
 
-  generateSensorPageEndpoint(app, 'light', 'lux', 'Histórico del sensor de luz', false);
-  generateSensorPageEndpoint(app, 'temp1w', 'ºC', 'Histórico del sensor de temperatura exterior', false);
-  generateSensorPageEndpoint(app, 'dht22_humidity', '%', 'Histórico del sensor de humedad', false, 100);
-  generateSensorPageEndpoint(app, 'dht22_temperature', 'ºC', 'Histórico del sensor de temperatura interior', false);
-  for (let i = 0; i < 6; i++) {
-    generateSensorPageEndpoint(app, `mcp_${i}`, '%', `Histórico del sensor de humedad en tierra ${i + 1}`, true, 100);
+  for (let sensor in config) {
+    generateSensorPageEndpoint(app, sensor, config[sensor]);
   }
-  generateSensorPageEndpoint(app, 'mcp_6', '%', 'Histórico del sensor de lluvia', true, 100);
-  generateSensorPageEndpoint(app, 'mcp_7', 'ppm', 'Histórico del sensor de calidad del aire', true, 100);
-
 
   app.get('/api/last', function(req, res) {
     dataCollection.find().sort({ date: -1 }).limit(1).toArray()
@@ -98,17 +115,19 @@ MongoClient.connect(MONGO_URL).then(db => {
 
   app.get('/api/:sensor', function(req, res) {
     const query = {};
-    query[req.params.sensor] = { $exists:true };
+    const sensor = req.params.sensor;
+    if (config[sensor] === undefined) {
+      console.error(`Sensor ${sensor} not recognized`);
+      return res.status(500).end();
+    }
+
+    query[sensor] = { $exists:true };
     dataCollection.find(query).sort({ date: -1 }).toArray()
     .then(values => res.json(values.map(x => {
       const sensorData = {};
       sensorData.date = x.date;
-      if (req.query.percentage === 'true') {
-        sensorData[req.params.sensor] = convertToPercentage(x[req.params.sensor]);
-      }
-      else {
-        sensorData[req.params.sensor] = x[req.params.sensor];
-      }
+      sensorData[sensor] = processSensorValueFromDB(sensor, x[sensor]);;
+
       return sensorData;
     })));
   });
