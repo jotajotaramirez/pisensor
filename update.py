@@ -80,7 +80,7 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['sensor']
 collection = db['data']
 
-document = { "date": datetime.now() }
+document = { "date": datetime.utcnow() }
 
 # Read analog inputs from MCP3008
 document.update(read_mcp())
