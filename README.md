@@ -15,10 +15,13 @@ Configure Raspberry Pi basics via `sudo raspi-config` (you'll need a monitor and
 
 ## Automatic installation
 
-Just run
+Clone project (you may need to install git first by running `sudo apt-get install git`).
+
+Then run
 ```bash
-chmod +x install.sh
-sudo ./install.sh
+cd pisensor \
+  && chmod +x install.sh \
+  && sudo ./install.sh
 ```
 
 ## Manual installation
@@ -74,6 +77,8 @@ mkdir -p /home/pi/backups \
   && tar -czf "/home/pi/backups/sensor.$(date '+%F_%H%M%S').tar.gz" dump
 ```
 
+## 3G Dongle
+sudo apt-get install modemmanager
 
 ## Acknowledgements
 
