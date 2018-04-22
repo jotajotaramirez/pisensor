@@ -77,8 +77,32 @@ mkdir -p /home/pi/backups \
   && tar -czf "/home/pi/backups/sensor.$(date '+%F_%H%M%S').tar.gz" dump
 ```
 
-## 3G Dongle
-sudo apt-get install modemmanager
+## OpenVPN
+
+If you're using a 3G dongle then you will need to be connected to a VPN in order to access this server as, usually, 3G cards offers internet under a global NAT that means that you can't access directly your server as it's using a private IP address.
+You can use OpenVPN as I've found it's the easiest way to do this. If you're using a QNAP NAS as a OpenVPN server then it's even easier, as the only thing you need to do is the following:
+
+* Install OpenVPN on the raspberry by running `sudo apt-get install openvpn`
+* Go to your QNAP NAS QVPN service, configure OpenVPN, grant privileges to one of your local users to OpenVPN and download the certificate file.
+* Copy that certificate file to `/etc/openvpn/YOURSERVER.conf` (you can do this using `scp YOURSERVER.ovpn pi@YOURRASPBERRYPIADDRESS:/etc/openvpn/YOURSERVER.conf`)
+* Create a new file login.cred and place on it the OpenVPN user name in the first line and the password in the second line. For example:
+
+```
+
+pi
+openVPNPassword
+
+```
+
+* edit `/etc/openvpn/YOURSERVER.conf` and specify where is your username/pass file by adding:
+
+```
+
+auth-user-pass login.cred
+
+```
+
+* Make OpenVPN start at boot by uncommenting the following line from `/etc/default/openvpn`: `AUTOSTART="all"`
 
 ## Acknowledgements
 
