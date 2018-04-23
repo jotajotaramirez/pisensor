@@ -53,18 +53,19 @@ cd /tmp
 pip install w1thermsensor
 ```
 
-## Store sensor data each minute
+## Automatically start everything
 
-Make sure /home/pi/pisensor/update.py has exec permissions by running `chmod +x update.py`.
+Make sure `/home/pi/pisensor/update.py` and `/home/pi/pisensor/monitor.sh` have exec permissions by running `chmod +x update.py` and `chmod +x monitor.sh`.
 Edit crontab by running `crontab -e` and adding this line with your favourite text editor:
 
-```* * * * * /home/pi/pisensor/update.py```
+```crontab
 
-Changes these values if you want to use a different schedule.
+* * * * * /home/pi/pisensor/update.py
+*/5 * * * * /home/pi/pisensor/monitor.sh
 
-## Start node server
+```
 
-Finally, once everything else has been setup, run `sudo npm start`.
+Changes these values if you want to use a different schedule. This will update sensors data every minute and will check that node server is up every 5 minutes (if it's down the script will try to start node).
 
 ## Automatically backup data
 
@@ -103,6 +104,8 @@ auth-user-pass login.cred
 ```
 
 * Make OpenVPN start at boot by uncommenting the following line from `/etc/default/openvpn`: `AUTOSTART="all"`
+
+After that you can access sensor page by running a nginx server on your NAS that will redirect all requests to your PiSensor server through VPN.
 
 ## Acknowledgements
 

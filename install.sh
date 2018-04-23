@@ -4,7 +4,7 @@ chmod +x update.py
 
 apt-get -y upgrade
 apt-get -y update
-apt-get -y install vim mongodb python-pymongo python3-pymongo build-essential python-dev python-smbus python-pymongo python-pip git i2c-tools
+apt-get -y install vim mongodb python-pymongo python3-pymongo build-essential python-dev python-smbus python-pymongo python-pip git i2c-tools openvpn
 curl -sL https://deb.nodesource.com/setup_8.x | bash -
 apt-get -y install nodejs
 
