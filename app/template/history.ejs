@@ -74,7 +74,7 @@
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-    d3.json("http://192.168.1.40/api/<%= field %>", function(error, data) {
+    d3.json("api/<%= field %>", function(error, data) {
       if (error) throw error;
 
       data = data.map((x,i) => ({date: new Date(x.date), <%= field %>: x.<%= field %>}))

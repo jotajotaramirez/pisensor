@@ -105,7 +105,53 @@ auth-user-pass login.cred
 
 * Make OpenVPN start at boot by uncommenting the following line from `/etc/default/openvpn`: `AUTOSTART="all"`
 
-After that you can access sensor page by running a nginx server on your NAS that will redirect all requests to your PiSensor server through VPN.
+After that you can access sensor page by running a nginx server on your NAS that will redirect all requests to your PiSensor server through VPN. For example, using nginx:
+
+docker run --rm --name pisensor-nginx -d --net=host -v /path/to/your/pisensor_nginx.conf:/etc/nginx/conf.d/default.conf:ro nginx
+
+Your pisensor_nginx.conf may be something like this:
+
+```conf
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    server {
+      listen 8888;
+
+      location / {
+            proxy_pass http://10.8.0.10/;
+      }
+    }
+
+    #include /etc/nginx/conf.d/*.conf;
+}
+```
 
 ## Acknowledgements
 
