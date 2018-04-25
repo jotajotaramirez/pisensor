@@ -82,7 +82,7 @@ MongoClient.connect(MONGO_URL).then(db => {
   // Configure data collection
   dataCollection.createIndex({ date: 1 });
 
-  app.use(compression);
+  app.use(compression());
 
   app.use(express.static(`${__dirname}/static`));
 
