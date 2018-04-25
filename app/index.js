@@ -9,6 +9,7 @@ const
   express = require('express'),
   app = express(),
   ejs = require('ejs'),
+  compression = require('compression'),
   MongoClient = require('mongodb').MongoClient,
   client = new MongoClient(MONGO_URL),
   figlet = require('figlet'),
@@ -80,6 +81,8 @@ MongoClient.connect(MONGO_URL).then(db => {
 
   // Configure data collection
   dataCollection.createIndex({ date: 1 });
+
+  app.use(compression);
 
   app.use(express.static(`${__dirname}/static`));
 
